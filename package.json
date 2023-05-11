@@ -9,7 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "set NODE_ENV=develop && nest start --watch",
+    "start:dev": "export NODE_ENV=develop && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -19,9 +19,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "orm:init": "typeorm-ts-node-esm -d src/config/data-source.ts",
-    "m:gen:dev": "set NODE_ENV=develop && pnpm run orm:init migration:generate",
-    "m:run:dev": "set NODE_ENV=develop && pnpm run orm:init migration:run",
-    "m:show:dev": "set NODE_ENV=develop && pnpm run orm:init migration:show",
+    "m:gen:dev": "export NODE_ENV=develop && pnpm run orm:init migration:generate",
+    "m:run:dev": "export NODE_ENV=develop && pnpm run orm:init migration:run",
+    "m:show:dev": "export NODE_ENV=develop && pnpm run orm:init migration:show",
     "typeorm": "typeorm"
   },
   "dependencies": {
