@@ -1,6 +1,6 @@
 import { BaseEntity } from '../../config/base.entity';
 import { ROLES } from '../../constans';
-import { IUser } from '../../interfaces/user.interface';
+import { IUser } from '../../interfaces';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { UsersProjectsEntity } from './usersProjects.entity';
 
@@ -20,6 +20,9 @@ export class UsersEntity extends BaseEntity implements IUser {
 
   @Column({ unique: true })
   username: string;
+
+  @Column()
+  password: string;
 
   @Column({ type: 'enum', enum: ROLES })
   role: ROLES;

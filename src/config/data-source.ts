@@ -3,7 +3,8 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 ConfigModule.forRoot({
-  envFilePath: `.${process.env.NODE_ENV}.env`,
+  envFilePath: `.${process.env.NODE_ENV.split(' ')[0]}.env`,
+  isGlobal: true,
 });
 
 const configService = new ConfigService();
@@ -15,12 +16,12 @@ export const DataSourceConfig: DataSourceOptions = {
   username: configService.get('DB_USER'),
   password: configService.get('DB_PASSWORD'),
   database: configService.get('DB_NAME'),
-  entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/../**/*.migrations/*{.ts,.js}'],
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/../migrations/*{.ts,.js}'],
   migrationsRun: true,
   logging: false,
   synchronize: false,
   namingStrategy: new SnakeNamingStrategy(),
 };
 
-export const AppDataSource = new DataSource(DataSourceConfig);
+export default new DataSource(DataSourceConfig);

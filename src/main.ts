@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import * as morgan from 'morgan';
@@ -10,6 +11,14 @@ async function bootstrap() {
   app.enableCors(CORS);
 
   app.use(morgan('dev'));
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
 
   app.setGlobalPrefix('api');
 

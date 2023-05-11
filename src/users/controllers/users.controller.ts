@@ -4,9 +4,4 @@ import { UsersService } from '../services/users.service';
 @Controller('users')
 export class UsersController {
   constructor(private readonly userServices: UsersService) {}
-
-  @Get()
-  getSay() {
-    return this.userServices.sayHello();
-  }
 }
