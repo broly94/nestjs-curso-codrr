@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectsEntity } from '../entities/projects.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { ProjectDto } from '../dto/project.dto';
+import { ProjectDto, ProjectUpdateDto } from '../dto/project.dto';
+import { ErrorManager } from 'src/utils/error.manager';
 
 @Injectable()
 export class ProjectsService {
@@ -11,51 +12,77 @@ export class ProjectsService {
     private readonly projectRepository: Repository<ProjectsEntity>,
   ) {}
 
-  findProjects(): Promise<ProjectsEntity[]> {
+  public async findProjects(): Promise<ProjectsEntity[]> {
     try {
-      return this.projectRepository.find();
+      const users = await this.projectRepository.find();
+      if (users.length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontraron datos',
+        });
+      }
+      return users;
     } catch (error) {
-      console.log(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  findProject(id: string): Promise<ProjectsEntity> {
+  async findProject(id: number): Promise<ProjectsEntity> {
     try {
-      return this.projectRepository
+      const user = await this.projectRepository
         .createQueryBuilder('project')
         .where({ id })
         .getOne();
+      if (!user) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontraron datos',
+        });
+      }
+      return user;
     } catch (error) {
-      console.log(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  createProject(body: ProjectDto): Promise<ProjectsEntity> {
+  public createProject(body: ProjectDto): Promise<ProjectsEntity> {
     try {
       return this.projectRepository.save(body);
     } catch (error) {
-      console.log(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  async updateProject(
-    body: ProjectDto,
+  public async updateProject(
+    body: ProjectUpdateDto,
     id: number,
   ): Promise<UpdateResult | undefined> {
     try {
-      const project = await this.projectRepository.update(body, { id });
-      if (project.affected === 0) return undefined;
+      const project = await this.projectRepository.update(id, body);
+      if (project.affected === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se pudieron actualizar los datos',
+        });
+      }
       return project;
     } catch (error) {
-      console.log(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  async deleteProject(id: number): Promise<DeleteResult> {
+  public async deleteProject(id: number): Promise<DeleteResult> {
     try {
-      return this.projectRepository.delete(id);
+      const user = await this.projectRepository.delete(id);
+      if (user.affected === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se puedo eliminar',
+        });
+      }
+      return user;
     } catch (error) {
-      console.log(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 }
