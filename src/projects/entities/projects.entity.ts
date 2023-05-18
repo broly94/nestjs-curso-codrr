@@ -16,5 +16,5 @@ export class ProjectsEntity extends BaseEntity implements IProject {
     () => UsersProjectsEntity,
     (usersProjects) => usersProjects.project,
   )
-  userIncludes: UsersProjectsEntity[];
+  userInclude: UsersProjectsEntity[];
 }

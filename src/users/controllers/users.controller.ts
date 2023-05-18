@@ -6,9 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { UserDto, UserUpdateDto } from '../dto/user.dto';
+import { RelationToProjectDto, UserDto, UserUpdateDto } from '../dto/user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -26,7 +27,15 @@ export class UsersController {
 
   @Post('register')
   public async registerUser(@Body() body: UserDto) {
-    return await this.userServices.createUser(body);
+    const user = await this.userServices.createUser(body);
+    return {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      age: user.age,
+      username: user.username,
+      role: user.role,
+    };
   }
 
   @Patch('edit/:id')
@@ -40,5 +49,10 @@ export class UsersController {
   @Delete(':id')
   public async deleteUser(@Param('id') id: number) {
     return await this.userServices.deleteUser(id);
+  }
+
+  @Post('add-to-project')
+  public async addToProject(@Body() body: RelationToProjectDto) {
+    return await this.userServices.relationToProject(body);
   }
 }

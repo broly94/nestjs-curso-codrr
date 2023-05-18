@@ -3,6 +3,7 @@ import { ROLES } from '../../constans';
 import { IUser } from '../../interfaces';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { UsersProjectsEntity } from './usersProjects.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class UsersEntity extends BaseEntity implements IUser {

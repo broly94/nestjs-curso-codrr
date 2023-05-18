@@ -14,14 +14,31 @@ export class ProjectsService {
 
   public async findProjects(): Promise<ProjectsEntity[]> {
     try {
-      const users = await this.projectRepository.find();
-      if (users.length === 0) {
+      const projects = await this.projectRepository
+        .createQueryBuilder('projects')
+        .leftJoinAndSelect('projects.userInclude', 'userInclude')
+        .leftJoinAndSelect('userInclude.user', 'user')
+        .select([
+          'projects.id',
+          'projects.name',
+          'projects.description',
+          'userInclude.accessLevel',
+          'user.id',
+          'user.firstName',
+          'user.lastName',
+          'user.age',
+          'user.email',
+          'user.username',
+          'user.role',
+        ])
+        .getMany();
+      if (projects.length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'No se encontraron datos',
         });
       }
-      return users;
+      return projects;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -30,8 +47,23 @@ export class ProjectsService {
   async findProject(id: number): Promise<ProjectsEntity> {
     try {
       const user = await this.projectRepository
-        .createQueryBuilder('project')
+        .createQueryBuilder('projects')
         .where({ id })
+        .leftJoinAndSelect('projects.userInclude', 'userInclude')
+        .leftJoinAndSelect('userInclude.user', 'user')
+        .select([
+          'projects.id',
+          'projects.name',
+          'projects.description',
+          'userInclude.accessLevel',
+          'user.id',
+          'user.firstName',
+          'user.lastName',
+          'user.age',
+          'user.email',
+          'user.username',
+          'user.role',
+        ])
         .getOne();
       if (!user) {
         throw new ErrorManager({
