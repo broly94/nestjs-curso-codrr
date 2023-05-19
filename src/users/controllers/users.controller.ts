@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { RelationToProjectDto, UserDto, UserUpdateDto } from '../dto/user.dto';
+import { CreateUsersInterceptor } from '../interceptors/users.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -25,17 +26,10 @@ export class UsersController {
     return await this.userServices.findUserById(id);
   }
 
+  @UseInterceptors(new CreateUsersInterceptor())
   @Post('register')
   public async registerUser(@Body() body: UserDto) {
-    const user = await this.userServices.createUser(body);
-    return {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      age: user.age,
-      username: user.username,
-      role: user.role,
-    };
+    return await this.userServices.createUser(body);
   }
 
   @Patch('edit/:id')

@@ -1,12 +1,19 @@
-import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UnauthorizedException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { AuthBody } from '../interfaces/auth.interface';
 import { AuthDto } from '../dto/auth.dto';
+import { AuthInterceptor } from '../interceptors/auth.interceptor';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @UseInterceptors(new AuthInterceptor())
   @Post('login')
   public async login(@Body() { username, password }: AuthDto) {
     const userValidate = await this.authService.validateUser(
@@ -18,17 +25,6 @@ export class AuthController {
       throw new UnauthorizedException('Los datos no son válidos');
     }
 
-    const jwt = await this.authService.generateJWT(userValidate);
-
-    return {
-      id: jwt.user.id,
-      firstName: jwt.user.firstName,
-      lastName: jwt.user.lastName,
-      age: jwt.user.age,
-      email: jwt.user.email,
-      username: jwt.user.username,
-      role: jwt.user.role,
-      accessToken: jwt.accessToken,
-    };
+    return await this.authService.generateJWT(userValidate);
   }
 }
