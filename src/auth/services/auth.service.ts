@@ -49,7 +49,7 @@ export class AuthService {
 
     const payload: PayloadToken = {
       role: getUser.role,
-      sub: getUser.id,
+      id: getUser.id,
     };
 
     return {

@@ -8,6 +8,7 @@ import {
 import { AuthService } from '../services/auth.service';
 import { AuthDto } from '../dto/auth.dto';
 import { AuthInterceptor } from '../interceptors/auth.interceptor';
+import { AuthResponse } from '../interfaces/auth.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -15,7 +16,9 @@ export class AuthController {
 
   @UseInterceptors(new AuthInterceptor())
   @Post('login')
-  public async login(@Body() { username, password }: AuthDto) {
+  public async login(
+    @Body() { username, password }: AuthDto,
+  ): Promise<AuthResponse> {
     const userValidate = await this.authService.validateUser(
       username,
       password,
