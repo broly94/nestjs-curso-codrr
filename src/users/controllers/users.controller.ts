@@ -13,23 +13,34 @@ import { UsersService } from '../services/users.service';
 import { RelationToProjectDto, UserDto, UserUpdateDto } from '../dto/user.dto';
 import { CreateUsersInterceptor } from '../interceptors/users.interceptor';
 import { AuthGuard } from '../../auth/guards/auth.guard';
-import { PublicAccess } from '../../auth/decorators/public.decorator';
+// import { PublicAccess } from '../../auth/decorators/public.decorator';
 import { RolesGuard } from '../../auth/guards/roles.guard';
+import { AdminAccess } from '../../auth/decorators/admin.decorator';
+import { PublicAccess } from '../../auth/decorators/public.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { ROLES } from '../../constans';
+import { AccessLevel } from '../../auth/decorators/access-level.decorator';
+import { AccessLevelGuard } from '../../auth/guards/access-level.guard';
+
+/**
+ * PublicAccess: No hace falta que se loguee o genere su token para hacer las peticiones http
+ * AdminAccess: Necesita estar logueado o enviar un token, ademas el usuario tiene que tener rol ADMIN para ejecutar las peticiones http
+ * ROLES.BASIC: Necesita estar logueado o enviar un token, puede ejecutar las peticiones http en base a su rol BASIC
+ */
 
 @Controller('users')
-@UseGuards(AuthGuard, RolesGuard)
+@UseGuards(AuthGuard, RolesGuard, AccessLevelGuard)
 export class UsersController {
   constructor(private readonly userServices: UsersService) {}
 
+  @AdminAccess()
+  @AccessLevel(20)
   @Get()
-  @Roles(ROLES.ADMIN)
   public async findAllUsers() {
     return await this.userServices.findUsers();
   }
 
-  @Roles(ROLES.ADMIN)
+  @Roles(ROLES.BASIC)
   @Get(':id')
   public async findUser(@Param('id') id: number) {
     return await this.userServices.findUserById(id);
@@ -42,7 +53,7 @@ export class UsersController {
     return await this.userServices.createUser(body);
   }
 
-  @Roles(ROLES.ADMIN)
+  @AdminAccess()
   @Patch('edit/:id')
   public async updateUser(
     @Body() body: UserUpdateDto,
@@ -51,13 +62,13 @@ export class UsersController {
     return await this.userServices.updateUser(body, id);
   }
 
-  @Roles(ROLES.ADMIN)
+  @AdminAccess()
   @Delete(':id')
   public async deleteUser(@Param('id') id: number) {
     return await this.userServices.deleteUser(id);
   }
 
-  @Roles(ROLES.ADMIN)
+  @AdminAccess()
   @Post('add-to-project')
   public async addToProject(@Body() body: RelationToProjectDto) {
     return await this.userServices.relationToProject(body);
