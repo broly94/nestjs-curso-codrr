@@ -21,8 +21,7 @@
     "orm:init": "typeorm-ts-node-esm -d src/config/data-source.ts",
     "m:gen:dev": "set NODE_ENV=develop&& pnpm run orm:init migration:generate",
     "m:run:dev": "set NODE_ENV=develop&& pnpm run orm:init migration:run",
-    "m:show:dev": "set NODE_ENV=develop&& pnpm run orm:init migration:show",
-    "typeorm": "typeorm"
+    "m:show:dev": "set NODE_ENV=develop&& pnpm run orm:init migration:show"
   },
   "dependencies": {
     "@nestjs/common": "9.0.0",
