@@ -31,7 +31,10 @@ export class RolesGuard implements CanActivate {
 
     const admin = this.reflector.get<string>(ADMIN_KEY, context.getHandler());
 
-    const roles = this.reflector.get<ROLES>(ROLES_KEY, context.getHandler());
+    const roles = this.reflector.get<Array<keyof typeof ROLES>>(
+      ROLES_KEY,
+      context.getHandler(),
+    );
 
     const req = context.switchToHttp().getRequest<Request>();
 
@@ -49,9 +52,9 @@ export class RolesGuard implements CanActivate {
       }
     }
 
-    if (role === ROLES.ADMIN) return true;
+    if (role === ROLES.ADMIN || role === ROLES.CREATOR) return true;
 
-    const isAuth = Object.values(roles).join('').includes(role);
+    const isAuth = roles.some((r) => r === role);
 
     if (!isAuth) {
       throw new UnauthorizedException('No tenes permismos para esta operación');

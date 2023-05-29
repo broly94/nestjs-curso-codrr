@@ -3,7 +3,6 @@ import { TasksEntity } from '../entities/tasks.entity';
 import { Repository } from 'typeorm';
 import { ProjectsService } from '../../projects/services/projects.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProjectDto } from '../../projects/dto/project.dto';
 import { TasksDto } from '../dto/tasks.dto';
 import { ErrorManager } from 'src/utils/error.manager';
 
@@ -27,11 +26,15 @@ export class TasksService {
     }
   }
 
-  public async findTasks() {
+  public async findTasksById(projectId: number) {
     try {
+      const project = await this.projectService.findProject(projectId);
       return this.taskRepository.find({
         relations: {
           project: true,
+        },
+        where: {
+          project,
         },
       });
     } catch (error) {

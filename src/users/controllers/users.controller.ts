@@ -29,18 +29,17 @@ import { AccessLevelGuard } from '../../auth/guards/access-level.guard';
  */
 
 @Controller('users')
-@UseGuards(AuthGuard, RolesGuard, AccessLevelGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly userServices: UsersService) {}
 
   @AdminAccess()
-  @AccessLevel(20)
   @Get()
   public async findAllUsers() {
     return await this.userServices.findUsers();
   }
 
-  @Roles(ROLES.BASIC)
+  @AdminAccess()
   @Get(':id')
   public async findUser(@Param('id') id: number) {
     return await this.userServices.findUserById(id);
@@ -68,7 +67,7 @@ export class UsersController {
     return await this.userServices.deleteUser(id);
   }
 
-  @AdminAccess()
+  @Roles('CREATOR', 'ADMIN')
   @Post('add-to-project')
   public async addToProject(@Body() body: RelationToProjectDto) {
     return await this.userServices.relationToProject(body);

@@ -13,13 +13,15 @@ import { AuthGuard } from '../../auth/guards/auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { AccessLevelGuard } from '../../auth/guards/access-level.guard';
 import { AccessLevel } from 'src/auth/decorators/access-level.decorator';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('tasks')
 @UseGuards(AuthGuard, RolesGuard, AccessLevelGuard)
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
 
-  @AccessLevel(40)
+  @Roles('BASIC')
+  @AccessLevel('OWNER')
   @Post('create/:projectId')
   public async createTask(
     @Body() body: TasksDto,
@@ -28,8 +30,10 @@ export class TasksController {
     return await this.taskService.createTask(body, projectId);
   }
 
-  @Get()
-  public async findTasks() {
-    return this.taskService.findTasks();
+  @Get('project/:projectId')
+  public async findTasksById(
+    @Param('projectId', ParseIntPipe) projectId: number,
+  ) {
+    return this.taskService.findTasksById(projectId);
   }
 }
