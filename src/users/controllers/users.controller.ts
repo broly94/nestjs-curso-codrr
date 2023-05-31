@@ -18,9 +18,7 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { AdminAccess } from '../../auth/decorators/admin.decorator';
 import { PublicAccess } from '../../auth/decorators/public.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
-import { ROLES } from '../../constans';
-import { AccessLevel } from '../../auth/decorators/access-level.decorator';
-import { AccessLevelGuard } from '../../auth/guards/access-level.guard';
+import { ApiHeader, ApiParam, ApiTags } from '@nestjs/swagger';
 
 /**
  * PublicAccess: No hace falta que se loguee o genere su token para hacer las peticiones http
@@ -28,23 +26,34 @@ import { AccessLevelGuard } from '../../auth/guards/access-level.guard';
  * ROLES.BASIC: Necesita estar logueado o enviar un token, puede ejecutar las peticiones http en base a su rol BASIC
  */
 
+@ApiTags('Users')
 @Controller('users')
 @UseGuards(AuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly userServices: UsersService) {}
 
+  @ApiHeader({
+    name: 'token_access',
+  })
   @AdminAccess()
   @Get()
   public async findAllUsers() {
     return await this.userServices.findUsers();
   }
 
+  @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'token_access',
+  })
   @AdminAccess()
   @Get(':id')
   public async findUser(@Param('id') id: number) {
     return await this.userServices.findUserById(id);
   }
 
+  @ApiHeader({
+    name: 'token_access',
+  })
   @PublicAccess()
   @UseInterceptors(new CreateUsersInterceptor())
   @Post('register')
@@ -52,6 +61,10 @@ export class UsersController {
     return await this.userServices.createUser(body);
   }
 
+  @ApiHeader({
+    name: 'token_access',
+  })
+  @ApiParam({ name: 'id' })
   @AdminAccess()
   @Patch('edit/:id')
   public async updateUser(
@@ -61,12 +74,19 @@ export class UsersController {
     return await this.userServices.updateUser(body, id);
   }
 
+  @ApiHeader({
+    name: 'token_access',
+  })
+  @ApiParam({ name: 'id' })
   @AdminAccess()
   @Delete(':id')
   public async deleteUser(@Param('id') id: number) {
     return await this.userServices.deleteUser(id);
   }
 
+  @ApiHeader({
+    name: 'token_access',
+  })
   @Roles('CREATOR', 'ADMIN')
   @Post('add-to-project')
   public async addToProject(@Body() body: RelationToProjectDto) {

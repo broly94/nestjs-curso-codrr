@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import * as morgan from 'morgan';
 import { CORS } from './constans';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,6 +22,15 @@ async function bootstrap() {
   );
 
   app.setGlobalPrefix('api');
+
+  const config = new DocumentBuilder()
+    .addSecurity('basic', { type: 'http', scheme: 'basic' })
+    .setTitle('Api Projects')
+    .setDescription('Aplicacion de gestion de tareas')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
 
   const configService = app.get(ConfigService);
 

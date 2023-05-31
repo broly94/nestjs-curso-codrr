@@ -16,7 +16,9 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { AccessLevelGuard } from '../../auth/guards/access-level.guard';
 import { AccessLevel } from '../../auth/decorators/access-level.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Projects')
 @UseGuards(AuthGuard, RolesGuard, AccessLevelGuard)
 @Controller('projects')
 export class ProjectsController {

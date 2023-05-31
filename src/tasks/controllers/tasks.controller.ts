@@ -14,7 +14,9 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { AccessLevelGuard } from '../../auth/guards/access-level.guard';
 import { AccessLevel } from 'src/auth/decorators/access-level.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Tasks')
 @Controller('tasks')
 @UseGuards(AuthGuard, RolesGuard, AccessLevelGuard)
 export class TasksController {

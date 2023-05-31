@@ -21,14 +21,19 @@
     "orm:init": "typeorm-ts-node-esm -d src/config/data-source.ts",
     "m:gen:dev": "set NODE_ENV=develop&& pnpm run orm:init migration:generate",
     "m:run:dev": "set NODE_ENV=develop&& pnpm run orm:init migration:run",
-    "m:show:dev": "set NODE_ENV=develop&& pnpm run orm:init migration:show"
+    "m:show:dev": "set NODE_ENV=develop&& pnpm run orm:init migration:show",
+    "m:gen:prod": "set NODE_ENV=production&& pnpm run orm:init migration:generate",
+    "m:run:prod": "set NODE_ENV=production&& pnpm run orm:init migration:run",
+    "m:show:prod": "set NODE_ENV=production&& pnpm run orm:init migration:show"
   },
   "dependencies": {
     "@nestjs/common": "9.0.0",
     "@nestjs/config": "2.3.1",
     "@nestjs/core": "9.0.0",
+    "@nestjs/devtools-integration": "^0.1.4",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "9.0.0",
+    "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "9.0.1",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
