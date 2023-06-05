@@ -5,7 +5,7 @@ FROM node:16
 WORKDIR /app
 
 # Copia el archivo package.json y pnpm-lock.json a /app
-COPY package*.json pnpm-lock.json ./
+COPY package*.json pnpm-lock.yaml ./
 
 # Instala las dependencias
 RUN npm install -g pnpm
