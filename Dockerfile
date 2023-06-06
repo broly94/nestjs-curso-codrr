@@ -27,7 +27,7 @@ RUN pnpm run build
 RUN ls -l src
 
 # Ejecuta las migraciones
-RUN pnpm run m:run:prod
+# RUN pnpm run m:run:prod
 
 # Expone el puerto en el que se ejecutará la aplicación
 EXPOSE 3000
