@@ -18,10 +18,13 @@ RUN pnpm config set global-bin-dir /usr/local/bin
 RUN pnpm add -g @nestjs/cli
 
 # Copia el resto de los archivos de la aplicación a /app
-COPY . .
+COPY dist/ .
 
 # Compila la aplicación TypeScript
 RUN pnpm run build
+
+# Después de la línea "RUN pnpm run build"
+RUN ls -l dist
 
 # Ejecuta las migraciones
 RUN pnpm run m:run:prod
