@@ -24,7 +24,7 @@ COPY . .
 RUN pnpm run build
 
 # Después de la línea "RUN pnpm run build"
-RUN ls -l dist
+RUN ls -l
 
 # Ejecuta las migraciones
 RUN pnpm run m:run:prod
