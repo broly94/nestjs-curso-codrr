@@ -3,7 +3,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 ConfigModule.forRoot({
-  envFilePath: `.${process.env.NODE_ENV.split(' ')[0]}.env`,
+  envFilePath: `.${process.env.NODE_ENV}.env`,
   isGlobal: true,
 });
 
