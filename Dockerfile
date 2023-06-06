@@ -26,12 +26,15 @@ RUN pnpm run build
 # Después de la línea "RUN pnpm run build"
 RUN ls -l
 
-# Ejecuta las migraciones
-# RUN pnpm run m:run:prod
-
 # Expone el puerto en el que se ejecutará la aplicación
 EXPOSE 3000
 
 # Inicia la aplicación
 CMD ["pnpm", "run", "start:prod"]
+
+# Después de la línea "RUN pnpm run build"
+RUN ls -l
+
+# Ejecuta las migraciones
+RUN pnpm run m:run:prod
 
