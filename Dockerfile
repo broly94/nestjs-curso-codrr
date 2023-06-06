@@ -20,6 +20,9 @@ RUN pnpm add -g @nestjs/cli
 # Copia el resto de los archivos de la aplicación a /app
 COPY . .
 
+# Copia el archivo data-source.ts al directorio /app/config/
+COPY config/data-source.ts /app/config/
+
 # Compila la aplicación TypeScript
 RUN pnpm run build
 
