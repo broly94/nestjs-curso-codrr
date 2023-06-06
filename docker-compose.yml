@@ -6,7 +6,7 @@ services:
     container_name: codrr_pg
     restart: always
     environment:
-      POSTGRES_DB: leoneldev_codrrdb
+      POSTGRES_DB: railway
       POSTGRES_USER: leoneldev
       POSTGRES_PASSWORD: joaquinteamoleo1
     volumes:
