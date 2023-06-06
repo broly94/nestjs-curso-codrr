@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "orm:init:dev": "typeorm-ts-node-esm -d src/config/data-source.ts",
-    "orm:init:prod": "typeorm-ts-node-esm -d /config/data-source.js",
+    "orm:init:prod": "typeorm-ts-node-esm -d dist/config/data-source.js",
     "m:gen:dev": "set NODE_ENV=develop&& pnpm run orm:init:dev migration:generate",
     "m:run:dev": "set NODE_ENV=develop&& pnpm run orm:init:dev migration:run",
     "m:show:dev": "set NODE_ENV=develop&& pnpm run orm:init:dev migration:show",
